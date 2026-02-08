@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Love Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fce4ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        #game-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        .question { font-size: 1.5rem; margin-bottom: 20px; color: #ad1457; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
+        #remark { margin-top: 15px; height: 20px; color: #ec407a; font-style: italic; }
+        #final-msg { display: none; font-size: 2rem; color: #ff1744; animation: heartbeat 1.5s infinite; }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="quiz-section">
+        <div id="question-text" class="question"></div>
+        <div id="options" class="options-grid"></div>
+        <div id="remark"></div>
+    </div>
+    <div id="final-msg">
+        ❤️ I LOVE YOU! ❤️
+        <p style="font-size: 1rem; color: #555;">Forever and always.</p>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            q: "What does love mean to you?",
+            options: ["Just a word", "A chemical reaction", "Our souls dancing together", "I don't know"],
+            correct: 2
+        },
+        {
+            q: "Why do you think I love you the most?",
+            options: ["Because I'm lucky", "Because we are made for each other", "Pure coincidence", "I'm just cool like that"],
+            correct: 1
+        },
+        {
+            q: "What is your role in my life?",
+            options: ["A supporting character", "My forever home and peace", "Just a friend", "A temporary passenger"],
+            correct: 1
+        },
+        {
+            q: "Will you be with me even if I lose all my brain?",
+            options: ["No way", "Maybe for a week", "Every single second of it", "I'll think about it"],
+            correct: 2
+        },
+        {
+            q: "Will you hold my hand, gazing at the stars, sitting on wheelchairs when we are 100?",
+            options: ["It's a deal!", "My hands might be too cold", "We'll be too old for stars", "I'd rather watch TV"],
+            correct: 0
+        }
+    ];
+
+    const colors = ["#FF5733", "#33FF57", "#3357FF", "#F333FF", "#FF33A1", "#33FFF5", "#F5FF33"];
+    const remarks = ["Really?", "Come on, try again!", "Oops, not that one!", "Are you sure? 🤨", "Try harder! ❤️"];
+    
+    let currentQ = 0;
+
+    function loadQuestion() {
+        const qData = questions[currentQ];
+        document.getElementById("question-text").innerText = qData.q;
+        const optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = "";
+        document.getElementById("remark").innerText = "";
+
+        // Shuffle colors so they are confusing
+        let shuffledColors = [...colors].sort(() => Math.random() - 0.5);
+
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.innerText = opt;
+            btn.style.backgroundColor = shuffledColors[index];
+            btn.onclick = () => checkAnswer(index);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(index) {
+        if (index === questions[currentQ].correct) {
+            currentQ++;
+            if (currentQ < questions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-section").style.display = "none";
+                document.getElementById("final-msg").style.display = "block";
+            }
+        } else {
+            const randomRemark = remarks[Math.floor(Math.random() * remarks.length)];
+            document.getElementById("remark").innerText = randomRemark;
+        }
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
